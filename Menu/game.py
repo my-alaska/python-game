@@ -1,17 +1,28 @@
 import pygame
-from menu import MainMenu
+from menu import MainMenu, OptionsMenu, CreditsMenu, GameplayMenu, LevelMenu, CharacterMenu, StatsMenu, ShopMenu
+
 
 class Game():
     def __init__(self):
         pygame.init()
         self.running, self.playing = True, False
-        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
-        self.DISPLAY_W, self.DISPLAY_H = 480, 270
+        self.UP_KEY, self.DOWN_KEY, self.LEFT_KEY, self.RIGHT_KEY, self.START_KEY, self.BACK_KEY = \
+            False, False, False, False, False, False
+        self.volume = 10
+        self.DISPLAY_W, self.DISPLAY_H = 600, 400
         self.display = pygame.Surface((self.DISPLAY_W, self.DISPLAY_H))
         self.window = pygame.display.set_mode((self.DISPLAY_W, self.DISPLAY_H))
         self.BLACK, self.WHITE = (0, 0, 0), (255, 255, 255)
         self.font_name = pygame.font.get_default_font()
-        self.curr_menu = MainMenu(self)
+        self.main_menu = MainMenu(self)
+        self.options_menu = OptionsMenu(self)
+        self.credits_menu = CreditsMenu(self)
+        self.gameplay_menu = GameplayMenu(self)
+        self.level_menu = LevelMenu(self)
+        self.character_menu = CharacterMenu(self)
+        self.stats_menu = StatsMenu(self)
+        self.shop_menu = ShopMenu(self)
+        self.curr_menu = self.main_menu
 
     def game_loop(self):
         while self.playing:
@@ -19,7 +30,7 @@ class Game():
             if self.START_KEY:
                 self.playing = False
             self.display.fill(self.BLACK)
-            self.draw_text('COMING SOON', 20, self.DISPLAY_W/2, self.DISPLAY_H/2)
+            self.draw_text('COMING SOON', 50, self.DISPLAY_W / 2, self.DISPLAY_H / 2)
             self.window.blit(self.display, (0, 0))
             pygame.display.update()
             self.reset_keys()
@@ -28,6 +39,7 @@ class Game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running, self.playing = False, False
+                self.curr_menu.run_display = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.START_KEY = True
@@ -37,9 +49,14 @@ class Game():
                     self.DOWN_KEY = True
                 if event.key == pygame.K_UP:
                     self.UP_KEY = True
+                if event.key == pygame.K_LEFT:
+                    self.LEFT_KEY = True
+                if event.key == pygame.K_RIGHT:
+                    self.RIGHT_KEY = True
 
     def reset_keys(self):
-        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
+        self.UP_KEY, self.DOWN_KEY, self.LEFT_KEY, self.RIGHT_KEY, self.START_KEY, self.BACK_KEY = \
+            False, False, False, False, False, False
 
     def draw_text(self, text, size, x, y):
         font = pygame.font.Font(self.font_name, size)
@@ -47,3 +64,4 @@ class Game():
         text_rect = text_surface.get_rect()
         text_rect.center = (x, y)
         self.display.blit(text_surface, text_rect)
+
