@@ -3,7 +3,8 @@ from menu import MainMenu, OptionsMenu, CreditsMenu, GameplayMenu, LevelMenu, Ch
 
 
 class Game():
-    def __init__(self):
+    def __init__(self, player_hero):
+        self.player_hero = player_hero
         pygame.init()
         self.running, self.playing = True, False
         self.UP_KEY, self.DOWN_KEY, self.LEFT_KEY, self.RIGHT_KEY, self.START_KEY, self.BACK_KEY = \

@@ -207,7 +207,7 @@ class LevelMenu(Menu):
         self.x3, self.y3 = self.mid_w, self.mid_h + 70
         self.cursor_rect.midtop = (self.x1 + self.offset, self.y1)
 
-    def display_menu(self):
+    def display_game(self):
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -245,12 +245,9 @@ class LevelMenu(Menu):
     def check_input(self):
         self.update_state()
         if self.game.START_KEY: # TODO UWAGA tu włączam pętlę walki, na razie bez podziału na poziomy
-            # pass  # TODO włączanie poziomów
-            hero = Hero()#TODO zrobić jakiegoś głównego bohatera czy coś
-            enemy = Enemy()#TODO zrobić aktualnego wroga
-            fight_menu = PlayersTurnMenu(self.game)
-            fight = Fight(hero, enemy, self.game, fight_menu)
-            fight.fight_loop()
+
+            fight = Fight(self.game.player_hero, self.state, self.game)
+
         elif self.game.BACK_KEY:
             self.run_display = False
             self.game.curr_menu = self.game.gameplay_menu
@@ -268,7 +265,7 @@ class CharacterMenu(Menu):
         self.cursor_rect.midtop = (self.x1 + self.offset, self.y1)
         self.o = ["miecz 1", "miecz 2", "miecz 3"]
 
-    def display_menu(self):
+    def display_game(self):
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -342,7 +339,7 @@ class StatsMenu(Menu):
             self.game.curr_menu = self.game.gameplay_menu
             self.run_display = False
 
-    def display_menu(self):
+    def display_game(self):
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -370,7 +367,7 @@ class ShopMenu(Menu):
         self.cursor_rect.midtop = (self.x1 + self.offset, self.y1)
         self.o = ["miecz 1", "miecz 2", "miecz 3"]
 
-    def display_menu(self):
+    def display_game(self):
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -429,9 +426,13 @@ class ShopMenu(Menu):
         if self.game.START_KEY:
             print("za mało złota by kupić przedmiot:", self.o[self.cursor_state - 1])
             # TODO kupowanie przemdiotów
+            if self.game.player_hero.items[self.o[self.cursor_state - 1]] == True:
+                print("masz już ten przedmiot")
         elif self.game.BACK_KEY:
             self.run_display = False
             self.game.curr_menu = self.game.gameplay_menu
+
+
 
 class PlayersTurnMenu(Menu):
     def __init__(self, game):
@@ -442,7 +443,7 @@ class PlayersTurnMenu(Menu):
         self.creditsx, self.creditsy = self.mid_w, self.mid_h + 70
         self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
 
-    def display_menu(self):
+    def display_game(self):
         self.run_display = True
         while self.run_display:
             self.game.check_events()

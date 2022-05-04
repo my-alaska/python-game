@@ -2,11 +2,10 @@ from Game_classes.item import Sword, Armor, Wand, Potion
 from enum import Enum
 
 class Creature:
-
     def __init__(self, health_points=100, mana_points=100, stamina_points=100, strength=20,
                  power=20, armor=10, agility=10, knowledge=10, magic_resistance=None, magic_attack_type=None):
         self.health_points = health_points
-        self.mana_points = mana_points
+        self.mana_points = mana_points # potrzebe tylko graczowi
         self.stamina_points = stamina_points
         self.strength = strength
         self.power = power
@@ -84,6 +83,7 @@ class Hero(Creature):
         self.active_armor: Armor = None
         self.active_wand: Wand = None
         self.active_potion: Potion = None
+        self.items = {"szypki czungus" : None} # przedmioty gracza wszystkie inicjalizujemy na None
 
     def calculate_attack(self):
         if self.active_sword is not None:

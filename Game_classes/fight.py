@@ -1,16 +1,24 @@
 import pygame
-
+from Game_classes.creature import Enemy
 
 class Fight:
-
-    def __init__(self, hero, enemy, game, players_turn_menu):
+    def __init__(self, hero, state, game):
         self.hero = hero
-        self.enemy = enemy
+
+        self.enemy = Enemy()
+
+        self.hero_state = 0
+        self.enemy_state = 0
+        self.timer_running = True   # kiedy jest true, paski hero_state i enemy_state się łądują
+        #inna opcja - stworzyć mini okienko w loopie - główna pętla gry ma używać sleepów. raz na pętlę dodajemy
+        #agility *0.01 do hero state i enemy state
+
         self.game = game
-        self.players_turn_menu = players_turn_menu
         self.mid_w, self.mid_h = self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2
         self.fight_is_on = True
         self.players_turn = True
+
+
 
     def fight_loop(self):
         while self.fight_is_on:
@@ -45,7 +53,7 @@ class Fight:
 
     def hero_action(self):#TODO ograniczenia na atakowanie np magiczne albo na poty
         if self.hero.stamina_points >= 100:
-            chosen_action = self.players_turn_menu.display_menu()
+            chosen_action = self.players_turn_menu.display_game()
             if chosen_action == "Melee attack":
                 self.hero.attack(self.enemy)
             elif chosen_action == "Magic attack":
