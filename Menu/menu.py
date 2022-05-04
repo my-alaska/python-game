@@ -1,5 +1,8 @@
 import pygame
 
+from Game_classes.creature import Hero, Enemy
+from Game_classes.fight import Fight
+
 
 class Menu():
     def __init__(self, game):
@@ -241,8 +244,13 @@ class LevelMenu(Menu):
 
     def check_input(self):
         self.update_state()
-        if self.game.START_KEY:
-            pass  # TODO włączanie poziomów
+        if self.game.START_KEY: # TODO UWAGA tu włączam pętlę walki, na razie bez podziału na poziomy
+            # pass  # TODO włączanie poziomów
+            hero = Hero()#TODO zrobić jakiegoś głównego bohatera czy coś
+            enemy = Enemy()#TODO zrobić aktualnego wroga
+            fight_menu = PlayersTurnMenu(self.game)
+            fight = Fight(hero, enemy, self.game, fight_menu)
+            fight.fight_loop()
         elif self.game.BACK_KEY:
             self.run_display = False
             self.game.curr_menu = self.game.gameplay_menu
@@ -424,3 +432,59 @@ class ShopMenu(Menu):
         elif self.game.BACK_KEY:
             self.run_display = False
             self.game.curr_menu = self.game.gameplay_menu
+
+class PlayersTurnMenu(Menu):
+    def __init__(self, game):
+        Menu.__init__(self, game)
+        self.state = "Melee attack"
+        self.startx, self.starty = self.mid_w, self.mid_h + 30
+        self.optionsx, self.optionsy = self.mid_w, self.mid_h + 50
+        self.creditsx, self.creditsy = self.mid_w, self.mid_h + 70
+        self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
+
+    def display_menu(self):
+        self.run_display = True
+        while self.run_display:
+            self.game.check_events()
+            action_taken = self.check_input()
+            self.game.display.fill(self.game.BLACK)
+            self.game.draw_text("Choose your move!", 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
+            self.game.draw_text("Melee attack", 20, self.startx, self.starty)
+            self.game.draw_text("Magic attack", 20, self.optionsx, self.optionsy)
+            self.game.draw_text("Use potion", 20, self.creditsx, self.creditsy)
+            self.draw_cursor()
+            self.blit_screen()
+        return action_taken
+
+    def check_input(self):
+        self.move_cursor()
+        if self.game.START_KEY:
+            self.run_display = False
+            if self.state == "Melee attack":
+                return "Melee attack"
+            elif self.state == "Magic attack":
+                return "Magic attack"
+            elif self.state == "Use potion":
+                return "Use potion"
+
+    def move_cursor(self):
+        if self.game.DOWN_KEY:
+            if self.state == "Melee attack":
+                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
+                self.state = "Magic attack"
+            elif self.state == "Magic attack":
+                self.cursor_rect.midtop = (self.creditsx + self.offset, self.creditsy)
+                self.state = "Use potion"
+            elif self.state == "Use potion":
+                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
+                self.state = "Melee attack"
+        elif self.game.UP_KEY:
+            if self.state == "Melee attack":
+                self.cursor_rect.midtop = (self.creditsx + self.offset, self.creditsy)
+                self.state = "Use potion"
+            elif self.state == "Magic attack":
+                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
+                self.state = "Melee attack"
+            elif self.state == "Use potion":
+                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
+                self.state = "Magic attack"
