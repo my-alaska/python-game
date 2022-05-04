@@ -10,7 +10,7 @@ class Game():
         self.UP_KEY, self.DOWN_KEY, self.LEFT_KEY, self.RIGHT_KEY, self.START_KEY, self.BACK_KEY = \
             False, False, False, False, False, False
         self.volume = 10
-        self.DISPLAY_W, self.DISPLAY_H = 600, 400
+        self.DISPLAY_W, self.DISPLAY_H = 900, 700
         self.display = pygame.Surface((self.DISPLAY_W, self.DISPLAY_H))
         self.window = pygame.display.set_mode((self.DISPLAY_W, self.DISPLAY_H))
         self.BLACK, self.WHITE = (0, 0, 0), (255, 255, 255)

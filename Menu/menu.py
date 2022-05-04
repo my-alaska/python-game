@@ -30,7 +30,7 @@ class MainMenu(Menu):
         self.creditsx, self.creditsy = self.mid_w, self.mid_h + 70
         self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
 
-    def display_menu(self):
+    def display_game(self):
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -84,7 +84,7 @@ class OptionsMenu(Menu):
         self.state = "Volume"
         self.volx, self.voly = self.mid_w, self.mid_h + 20
 
-    def display_menu(self):
+    def display_game(self):
         self.run_display = True
         while self.run_display:
             self.game.display.fill(self.game.BLACK)
@@ -117,7 +117,7 @@ class CreditsMenu(Menu):
             self.game.curr_menu = self.game.main_menu
             self.run_display = False
 
-    def display_menu(self):
+    def display_game(self):
         self.run_display = True
         chungus = pygame.image.load("chungus.png")
         while self.run_display:
@@ -138,7 +138,7 @@ class GameplayMenu(Menu):
         self.shopx, self.shopy = self.mid_w, self.mid_h + 90
         self.cursor_rect.midtop = (self.levelx + self.offset, self.levely)
 
-    def display_menu(self):
+    def display_game(self):
         self.run_display = True
         while self.run_display:
             self.game.check_events()
@@ -246,7 +246,8 @@ class LevelMenu(Menu):
         self.update_state()
         if self.game.START_KEY: # TODO UWAGA tu włączam pętlę walki, na razie bez podziału na poziomy
 
-            fight = Fight(self.game.player_hero, self.state, self.game)
+            fight = Fight(Hero(), self.state, self.game)
+            fight.fight_loop()
 
         elif self.game.BACK_KEY:
             self.run_display = False
