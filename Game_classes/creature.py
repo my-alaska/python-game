@@ -31,22 +31,25 @@ class Creature:
 
     def receive_injuries(self, damage: int):
         self.health_points -= damage
+        print(self.health_points)
 
     def is_dead(self):
         return self.health_points <= 0
 
-    def attack(self, attacked_creature):
-        stamina_cost = self.calculate_stamina_attack_cost()
-        if stamina_cost <= self.stamina_points:
-            attack = self.calculate_attack()
-            attacked_creature_armor = attacked_creature.calculate_armor()
-            attacked_creature.receive_injuries(attack - attacked_creature_armor)
-            print(attack - attacked_creature_armor)
-            self.stamina_points -= self.calculate_stamina_attack_cost()
-            print("melee dupa")
-            return True
+    def attack(self, attack_type):
+        if attack_type == "Attack":
+            return self.calculate_attack(), None
         else:
-            return False
+            return self.calculate_power(), self.magic_attack_type
+
+    def reduce_damage(self, attack_type, damage, magic_attack_type):
+        if attack_type == "Attack":
+            return max(0, damage - self.calculate_armor())
+        else:
+            if self.magic_resistance is not None:
+                return damage * self.magic_resistance.get_magic_resistance(magic_attack_type)
+            else:
+                return damage
 
     # TODO czy mana cost jest staly?
     def magic_attack(self, attacked_creature):
@@ -199,7 +202,7 @@ class MagicResistance:
 class Strategy:
 
     def __init__(self):
-        self.moves_loop = ["melee attack", "melee attack", "melee attack", "magic attack"]
+        self.moves_loop = ["Attack", "Attack", "Attack"]
         self.current_move = -1
 
     def make_move(self):
