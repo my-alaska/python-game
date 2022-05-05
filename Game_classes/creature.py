@@ -1,5 +1,6 @@
 from Game_classes.item import Sword, Armor, Wand, Potion
 from enum import Enum
+from Game_classes.item import init_inventory, ItemType
 
 class Creature:
     def __init__(self, health_points=100, mana_points=100, stamina_points=100, strength=20,
@@ -17,6 +18,7 @@ class Creature:
         else:
             self.magic_resistance = magic_resistance
         self.magic_attack_type = magic_attack_type
+
 
     def calculate_attack(self):
         return self.strength
@@ -78,12 +80,12 @@ class Hero(Creature):
                  power=10, armor=10, agility=10, magic_resistance=None, magic_attack_type=None):
         Creature.__init__(self, health_points, mana_points, stamina_points, strength, power, armor, agility,
                           magic_resistance, magic_attack_type)
-        self.gold = 0
+        self.gold = 100
         self.active_sword: Sword = None
         self.active_armor: Armor = None
         self.active_wand: Wand = None
         self.active_potion: Potion = None
-        self.items = {"szypki czungus" : None} # przedmioty gracza wszystkie inicjalizujemy na None
+        self.items = init_inventory() # przedmioty gracza wszystkie inicjalizujemy na None
 
     def calculate_attack(self):
         if self.active_sword is not None:
@@ -117,6 +119,34 @@ class Hero(Creature):
             return self.active_sword.attack_stamina_cost
         else:
             return 10
+
+    def wear(self, item_name):
+        item_o = self.items[item_name]
+        if item_o is None:
+            print("you don't own this item")
+            return 1
+        else:
+            type = item_o.item_type
+            if type == ItemType.SWORD:
+                if self.active_sword == item_o:
+                    return 2
+                self.active_sword = item_o
+            elif type == ItemType.WAND:
+                if self.active_wand == item_o:
+                    return 2
+                self.active_wand = item_o
+            elif type == ItemType.ARMOR:
+                if self.active_armor == item_o:
+                    return 2
+                self.active_armor = item_o
+            elif type == ItemType.POTION:
+                if self.active_potion == item_o:
+                    return 2
+                self.active_potion = item_o
+            else:
+                print("gupi error którego pewnie nigdy nie będzie")
+                return 3
+            return 0
 
 
 class Enemy(Creature):

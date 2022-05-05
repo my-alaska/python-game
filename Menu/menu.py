@@ -263,8 +263,10 @@ class CharacterMenu(Menu):
         self.x1, self.y1 = self.mid_w, self.mid_h + 30
         self.x2, self.y2 = self.mid_w, self.mid_h + 50
         self.x3, self.y3 = self.mid_w, self.mid_h + 70
+        self.x4, self.y4 = self.mid_w, self.mid_h + 110
         self.cursor_rect.midtop = (self.x1 + self.offset, self.y1)
         self.o = ["miecz 1", "miecz 2", "miecz 3"]
+        self.fail_message = None
 
     def display_game(self):
         self.run_display = True
@@ -276,6 +278,8 @@ class CharacterMenu(Menu):
             self.game.draw_text(self.o[0], 20, self.x1, self.y1)
             self.game.draw_text(self.o[1], 20, self.x2, self.y2)
             self.game.draw_text(self.o[2], 20, self.x3, self.y3)
+            if self.fail_message is not None:
+                self.game.draw_text(self.fail_message, 20, self.x4, self.y4)
             self.draw_cursor()
             self.blit_screen()
 
@@ -296,6 +300,9 @@ class CharacterMenu(Menu):
                 self.state = "Zbroja"
                 self.o = ["zbroja 1", "zbroja 2", "zbroja 3"]
             elif self.state == "Zbroja":
+                self.state = "Mikstura"
+                self.o = ["mała mikstura", "średnia mikstura", "duża mikstura"]
+            elif self.state == "Mikstura":
                 self.state = "Broń"
                 self.o = ["miecz 1", "miecz 2", "miecz 3"]
         elif self.game.LEFT_KEY:
@@ -303,6 +310,9 @@ class CharacterMenu(Menu):
                 self.state = "Różdżka"
                 self.o = ["różdżka ognia", "różdżka lodu", "różdżka błyskawic"]
             elif self.state == "Broń":
+                self.state = "Mikstura"
+                self.o = ["mała mikstura", "średnia mikstura", "duża mikstura"]
+            elif self.state == "Mikstura":
                 self.state = "Zbroja"
                 self.o = ["zbroja 1", "zbroja 2", "zbroja 3"]
             elif self.state == "Różdżka":
@@ -318,7 +328,15 @@ class CharacterMenu(Menu):
     def check_input(self):
         self.update_state()
         if self.game.START_KEY:
-            print("nie posiadasz", self.o[self.cursor_state - 1])  # TODO włączanie poziomów
+            wear_result = self.game.player_hero.wear(self.o[self.cursor_state - 1])
+            if wear_result == 0:
+                self.fail_message = "success"
+            elif wear_result == 1:
+                self.fail_message = "You don't own this item"
+            elif wear_result == 2:
+                self.fail_message = "You're already wearing this item"
+            else:
+                self.fail_message = "unexpected error"
         elif self.game.BACK_KEY:
             self.run_display = False
             self.game.curr_menu = self.game.gameplay_menu
@@ -331,9 +349,10 @@ class StatsMenu(Menu):
         self.hpx, self.hpy = self.mid_w, self.mid_h + 30
         self.mpx, self.mpy = self.mid_w, self.mid_h + 50
         self.strx, self.stry = self.mid_w, self.mid_h + 70
-        self.conx, self.cony = self.mid_w, self.mid_h + 90
-        self.speedx, self.speedy = self.mid_w, self.mid_h + 110
-        self.mrx, self.mry = self.mid_w, self.mid_h + 130
+        self.intx, self.inty = self.mid_w, self.mid_h + 90
+        self.conx, self.cony = self.mid_w, self.mid_h + 110
+        self.speedx, self.speedy = self.mid_w, self.mid_h + 130
+        self.mrx, self.mry = self.mid_w, self.mid_h + 150
 
     def check_input(self):
         if self.game.START_KEY or self.game.BACK_KEY:
@@ -347,12 +366,16 @@ class StatsMenu(Menu):
             self.check_input()
             self.game.display.fill(self.game.BLACK)
             self.game.draw_text("Statistics", 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
-            self.game.draw_text(f"hit points {0}", 20, self.hpx, self.hpy)
-            self.game.draw_text(f"magic points {0}", 20, self.mpx, self.mpy)
-            self.game.draw_text(f"strength {0}", 20, self.strx, self.stry)
-            self.game.draw_text(f"constitution {0}", 20, self.conx, self.cony)
-            self.game.draw_text(f"speed {0}", 20, self.speedx, self.speedy)
-            self.game.draw_text(f"fire/ice/lightning resistance {0}/{0}/{0}", 20, self.mrx, self.mry)
+            self.game.draw_text(f"hit points {self.game.player_hero.health_points}", 20, self.hpx, self.hpy)
+            self.game.draw_text(f"magic points {self.game.player_hero.mana_points}", 20, self.mpx, self.mpy)
+            self.game.draw_text(f"strength {self.game.player_hero.calculate_attack()}", 20, self.strx, self.stry)
+            self.game.draw_text(f"magic power {self.game.player_hero.calculate_power()}", 20, self.intx, self.inty)
+            self.game.draw_text(f"armor {self.game.player_hero.calculate_armor()}", 20, self.conx, self.cony)
+            self.game.draw_text(f"speed {self.game.player_hero.agility}", 20, self.speedx, self.speedy)
+            self.game.draw_text(f"fire/ice/lightning resistance "
+                                f"{self.game.player_hero.magic_resistance.fire_resistance}"
+                                f"/{self.game.player_hero.magic_resistance.ice_resistance}"
+                                f"/{self.game.player_hero.magic_resistance.shock_resistance}", 20, self.mrx, self.mry)
             self.blit_screen()
 
 
@@ -362,9 +385,11 @@ class ShopMenu(Menu):
         self.game = game
         self.state = "Broń"
         self.cursor_state = 1
+        self.fail_message = None
         self.x1, self.y1 = self.mid_w, self.mid_h + 30
         self.x2, self.y2 = self.mid_w, self.mid_h + 50
         self.x3, self.y3 = self.mid_w, self.mid_h + 70
+        self.x4, self.y4 = self.mid_w, self.mid_h + 110
         self.cursor_rect.midtop = (self.x1 + self.offset, self.y1)
         self.o = ["miecz 1", "miecz 2", "miecz 3"]
 
@@ -378,6 +403,8 @@ class ShopMenu(Menu):
             self.game.draw_text(self.o[0], 20, self.x1, self.y1)
             self.game.draw_text(self.o[1], 20, self.x2, self.y2)
             self.game.draw_text(self.o[2], 20, self.x3, self.y3)
+            if self.fail_message is not None:
+                self.game.draw_text(self.fail_message, 20, self.x4, self.y4)
             self.draw_cursor()
             self.blit_screen()
 
@@ -425,10 +452,13 @@ class ShopMenu(Menu):
     def check_input(self):
         self.update_state()
         if self.game.START_KEY:
-            print("za mało złota by kupić przedmiot:", self.o[self.cursor_state - 1])
-            # TODO kupowanie przemdiotów
-            if self.game.player_hero.items[self.o[self.cursor_state - 1]] == True:
-                print("masz już ten przedmiot")
+            sale_result = self.game.shop.sell_item_to_hero(self.o[self.cursor_state - 1], self.game.player_hero)
+            if sale_result == 1:
+                self.fail_message = "item already in inventory"
+            elif sale_result == 2:
+                self.fail_message = "not enough gold"
+            else:
+                self.fail_message = "successful purchase"
         elif self.game.BACK_KEY:
             self.run_display = False
             self.game.curr_menu = self.game.gameplay_menu

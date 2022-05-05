@@ -1,9 +1,11 @@
 import pygame
 from menu import MainMenu, OptionsMenu, CreditsMenu, GameplayMenu, LevelMenu, CharacterMenu, StatsMenu, ShopMenu
+from Game_classes.shop import Shop
+from Game_classes.creature import Hero
 
 
 class Game():
-    def __init__(self, player_hero):
+    def __init__(self, player_hero: Hero):
         self.player_hero = player_hero
         pygame.init()
         self.running, self.playing = True, False
@@ -24,6 +26,7 @@ class Game():
         self.stats_menu = StatsMenu(self)
         self.shop_menu = ShopMenu(self)
         self.curr_menu = self.main_menu
+        self.shop = Shop()
 
     def game_loop(self):
         while self.playing:
