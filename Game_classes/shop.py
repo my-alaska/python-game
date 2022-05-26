@@ -1,4 +1,4 @@
-from Game_classes.creature import Hero
+from Game_classes.creature import Hero, MagicAttackType
 from Game_classes.item import Item, ItemType
 import Game_classes.item as itm
 
@@ -16,9 +16,9 @@ class Shop:
             "mała mikstura": itm.Potion(30,50),
             "średnia mikstura": itm.Potion(60,75),
             "duża mikstura": itm.Potion(100,100),
-            "różdżka ognia": itm.Wand(30,"fire",50),
-            "różdżka lodu": itm.Wand(30,"ice",50),
-            "różdżka błyskawic": itm.Wand(30,"lightning",50)
+            "różdżka ognia": itm.Wand(30,MagicAttackType.FIRE,50),
+            "różdżka lodu": itm.Wand(30,MagicAttackType.ICE,50),
+            "różdżka błyskawic": itm.Wand(30,MagicAttackType.SHOCK,50)
         }
 
     def sell_item_to_hero(self, item_name, hero: Hero):

@@ -1,18 +1,26 @@
 import pygame
+
+from Game_classes.level import init_levels
 from menu import MainMenu, OptionsMenu, CreditsMenu, GameplayMenu, LevelMenu, CharacterMenu, StatsMenu, ShopMenu
 from Game_classes.shop import Shop
-from Game_classes.creature import Hero
+from Game_classes.creature import Hero, init_enemies
+from pygame import mixer
 
 
 class Game():
     def __init__(self, player_hero: Hero):
         self.player_hero = player_hero
         pygame.init()
+        mixer.music.load("../game_contents/python game ost.mp3")
+        self.volume = 0
+        mixer.music.set_volume(self.volume / 10)
+        mixer.music.play(-1)
         self.running, self.playing = True, False
         self.UP_KEY, self.DOWN_KEY, self.LEFT_KEY, self.RIGHT_KEY, self.START_KEY, self.BACK_KEY = \
             False, False, False, False, False, False
-        self.volume = 10
         self.DISPLAY_W, self.DISPLAY_H = 900, 700
+        self.background_image = pygame.image.load("../game_contents/background.png")
+        self.background_image = pygame.transform.scale(self.background_image, (self.DISPLAY_W, self.DISPLAY_H))
         self.display = pygame.Surface((self.DISPLAY_W, self.DISPLAY_H))
         self.window = pygame.display.set_mode((self.DISPLAY_W, self.DISPLAY_H))
         self.BLACK, self.WHITE = (0, 0, 0), (255, 255, 255)
@@ -27,6 +35,8 @@ class Game():
         self.shop_menu = ShopMenu(self)
         self.curr_menu = self.main_menu
         self.shop = Shop()
+        self.levels = init_levels(init_enemies(self.init_images()))
+
 
     def game_loop(self):
         while self.playing:
@@ -69,3 +79,21 @@ class Game():
         text_rect.center = (x, y)
         self.display.blit(text_surface, text_rect)
 
+    def get_level_color(self, level_index):
+        if level_index == 1 or self.levels[level_index - 2].completed:
+            return 255, 255, 255
+        else:
+            return 255, 0, 0
+
+    def init_images(self):
+        image_w = 200
+        image_h = 200
+        skeleton = pygame.image.load("../game_contents/skeleton.png")
+        skeleton = pygame.transform.scale(skeleton, (image_w, image_h))
+        knight = pygame.image.load("../game_contents/knight.png")
+        knight = pygame.transform.scale(knight, (image_w, image_h))
+        garek = pygame.image.load("../game_contents/hotpot.png")
+        garek = pygame.transform.scale(garek, (image_w, image_h))
+        slime = pygame.image.load("../game_contents/slime.png")
+        slime = pygame.transform.scale(slime, (image_w, image_h))
+        return [slime, skeleton, knight, garek]

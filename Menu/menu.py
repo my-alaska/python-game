@@ -2,6 +2,7 @@ import pygame
 
 from Game_classes.creature import Hero, Enemy
 from Game_classes.fight import Fight
+from pygame import mixer
 
 
 class Menu():
@@ -35,7 +36,8 @@ class MainMenu(Menu):
         while self.run_display:
             self.game.check_events()
             self.check_input()
-            self.game.display.fill(self.game.BLACK)
+            # self.game.display.fill(self.game.BLACK)
+            self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
             self.game.draw_text("Main Menu", 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
             self.game.draw_text("Start Game", 20, self.startx, self.starty)
             self.game.draw_text("Options", 20, self.optionsx, self.optionsy)
@@ -87,7 +89,8 @@ class OptionsMenu(Menu):
     def display_game(self):
         self.run_display = True
         while self.run_display:
-            self.game.display.fill(self.game.BLACK)
+            # self.game.display.fill(self.game.BLACK)
+            self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
             self.game.check_events()
             self.check_input()
             self.game.draw_text("Options", 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
@@ -99,6 +102,7 @@ class OptionsMenu(Menu):
             self.game.volume += 1
         elif self.game.LEFT_KEY and self.game.volume != 0:
             self.game.volume -= 1
+        mixer.music.set_volume(self.game.volume / 10)
 
     def check_input(self):
         self.change_volume()
@@ -143,7 +147,8 @@ class GameplayMenu(Menu):
         while self.run_display:
             self.game.check_events()
             self.check_input()
-            self.game.display.fill(self.game.BLACK)
+            # self.game.display.fill(self.game.BLACK)
+            self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
             self.game.draw_text("Game", 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
             self.game.draw_text("Level", 20, self.levelx, self.levely)
             self.game.draw_text("Character", 20, self.characterx, self.charactery)
@@ -211,18 +216,19 @@ class LevelMenu(Menu):
         self.run_display = True
         while self.run_display:
             self.game.check_events()
-            self.check_input()
-            self.game.display.fill(self.game.BLACK)
+            self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
+            # self.game.display.fill(self.game.BLACK)
             if self.state == 1:
                 i = 2
             elif self.state == 10:
                 i = 9
             else:
                 i = self.state
+            self.check_input(self.state)
             self.game.draw_text("Select Level", 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
-            self.game.draw_text(f"level {i - 1}", 20, self.x1, self.y1)
-            self.game.draw_text(f"level {i}", 20, self.x2, self.y2)
-            self.game.draw_text(f"level {i + 1}", 20, self.x3, self.y3)
+            self.game.draw_text(f"level {i - 1}", 20, self.x1, self.y1, self.game.get_level_color(i - 1))
+            self.game.draw_text(f"level {i}", 20, self.x2, self.y2, self.game.get_level_color(i))
+            self.game.draw_text(f"level {i + 1}", 20, self.x3, self.y3, self.game.get_level_color(i + 1))
             self.draw_cursor()
             self.blit_screen()
 
@@ -242,13 +248,11 @@ class LevelMenu(Menu):
             self.state -= 1
             self.move_cursor()
 
-    def check_input(self):
+    def check_input(self, level_index):
         self.update_state()
-        if self.game.START_KEY: # TODO UWAGA tu włączam pętlę walki, na razie bez podziału na poziomy
-
-            fight = Fight(Hero(), self.state, self.game)
+        if self.game.START_KEY and (level_index == 1 or self.game.levels[level_index - 2].completed): # TODO UWAGA tu włączam pętlę walki, na razie bez podziału na poziomy
+            fight = Fight(self.game.player_hero, self.game, self.game.levels[level_index - 1])
             fight.fight_loop()
-
         elif self.game.BACK_KEY:
             self.run_display = False
             self.game.curr_menu = self.game.gameplay_menu
@@ -273,7 +277,8 @@ class CharacterMenu(Menu):
         while self.run_display:
             self.game.check_events()
             self.check_input()
-            self.game.display.fill(self.game.BLACK)
+            # self.game.display.fill(self.game.BLACK)
+            self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
             self.game.draw_text(self.state, 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
             self.game.draw_text(self.o[0], 20, self.x1, self.y1)
             self.game.draw_text(self.o[1], 20, self.x2, self.y2)
@@ -364,7 +369,8 @@ class StatsMenu(Menu):
         while self.run_display:
             self.game.check_events()
             self.check_input()
-            self.game.display.fill(self.game.BLACK)
+            self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
+            # self.game.display.fill(self.game.BLACK)
             self.game.draw_text("Statistics", 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
             self.game.draw_text(f"hit points {self.game.player_hero.health_points}", 20, self.hpx, self.hpy)
             self.game.draw_text(f"magic points {self.game.player_hero.mana_points}", 20, self.mpx, self.mpy)
@@ -398,7 +404,8 @@ class ShopMenu(Menu):
         while self.run_display:
             self.game.check_events()
             self.check_input()
-            self.game.display.fill(self.game.BLACK)
+            self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
+            # self.game.display.fill(self.game.BLACK)
             self.game.draw_text(self.state, 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
             self.game.draw_text(self.o[0], 20, self.x1, self.y1)
             self.game.draw_text(self.o[1], 20, self.x2, self.y2)
@@ -479,7 +486,8 @@ class PlayersTurnMenu(Menu):
         while self.run_display:
             self.game.check_events()
             action_taken = self.check_input()
-            self.game.display.fill(self.game.BLACK)
+            # self.game.display.fill(self.game.BLACK)
+            self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
             self.game.draw_text("Choose your move!", 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
             self.game.draw_text("Melee attack", 20, self.startx, self.starty)
             self.game.draw_text("Magic attack", 20, self.optionsx, self.optionsy)

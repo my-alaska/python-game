@@ -19,15 +19,17 @@ def init_inventory():
     return inventory
 
 
-class Item():
+class Item:
     def __init__(self, cost, item_type):
         self.cost = cost
         self.item_type = item_type
+
 
 class Armor(Item):
     def __init__(self, armor_bonus, cost):
         Item.__init__(self, cost, ItemType.ARMOR)
         self.armor_bonus = armor_bonus
+
 
 class Sword(Item):
 
@@ -50,7 +52,8 @@ class Potion(Item):
         self.health_restored = health_restored
 
     def heal_hero(self, hero):
-        hero.health_points += self.health_restored
+        hero.health_points = max(self.health_restored + hero.health_points, 100)
+
 
 class ItemType(Enum):
     SWORD = 1
