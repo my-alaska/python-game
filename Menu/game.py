@@ -83,7 +83,7 @@ class Game():
         if level_index == 1 or self.levels[level_index - 2].completed:
             return 255, 255, 255
         else:
-            return 255, 0, 0
+            return 64,64,64
 
     def init_images(self):
         image_w = 200

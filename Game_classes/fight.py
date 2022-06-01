@@ -11,7 +11,7 @@ class Fight:
         self.state = "Attack"
         # TODO poziom stwora
         self.action_type = None #do zapisywania jaki ruch chce player
-        self.hero_state = 90
+        self.hero_state = 0
         self.enemy_state = 0
         self.timer_running = True   # kiedy jest true, paski hero_state i enemy_state się łądują
         #inna opcja - stworzyć mini okienko w loopie - główna pętla gry ma używać sleepów. raz na pętlę dodajemy
@@ -35,21 +35,27 @@ class Fight:
             self.game.reset_keys()
             self.display_game_scene()
             pygame.time.wait(500)
-            curr_state, possible_attack = self.hero_action()
+
+            if self.hero_state >= 100:
+                curr_state, possible_attack = self.hero_action()
+            else:
+                curr_state = None
             if curr_state == "Attack" or curr_state == "Magic":
                 self.handle_attack(self.enemy, curr_state, possible_attack)
-                if self.enemy.is_dead():
-                    self.end_fight_good(self.gold)
-                    break
+
+            if self.enemy.is_dead():
+                self.end_fight_good(self.gold)
+                break
 
             # pygame.time.wait(1000)
             self.display_game_scene()
             curr_state, possible_attack = self.enemy_action()
             if curr_state == "Attack" or curr_state == "Magic":
                 self.handle_attack(self.hero, curr_state, possible_attack)
-                if self.hero.is_dead():
-                    self.end_fight_bad()
-                    break
+
+            if self.hero.is_dead():
+                self.end_fight_bad()
+                break
             # pygame.time.wait(1000)
             self.movement_regeneration()
 
@@ -107,7 +113,7 @@ class Fight:
 
     def check_input(self):
         self.move_cursor()
-        if self.game.START_KEY:
+        if self.hero_state >= 100 and self.game.START_KEY:
             if self.state == "Attack" or self.state == "Defend":
                 return True
             elif self.state == "Magic":
@@ -151,6 +157,11 @@ class Fight:
     def get_color(self, string):
         if self.state == string:
             return 255, 0, 0
+        elif string == "Magic" and self.hero.active_wand == None:
+            return 64, 64, 64
+        elif string == "Potion" and self.hero.active_potion == None:
+            return 64, 64, 64
+
         else:
             return 255, 255, 255
 
@@ -163,9 +174,12 @@ class Fight:
 
     def hero_action(self):#TODO zrob ze resetowanie obrony na turze ograniczenia na atakowanie np magiczne albo na poty
         self.state = "Attack"
+        self.game.check_events()
+        self.game.reset_keys()
         if self.hero_state >= 100:
             self.defending = False
             while True:
+
                 self.game.reset_keys()
                 self.game.check_events()
                 if self.check_input():
@@ -207,10 +221,11 @@ class Fight:
         self.fight_is_on = False
         self.hero.gold += gold
         self.level.completed = True
-        self.hero.reset_hero_stats()
+        self.hero.reset_creature_stats()
+        self.enemy.reset_creature_stats()
 
     def end_fight_bad(self):
         self.fight_is_on = False
+        self.hero.reset_creature_stats()
+        self.enemy.reset_creature_stats()
 
-    def print_game_over(self):
-        self.game.draw_text("GAME OVER", 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2)

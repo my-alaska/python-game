@@ -104,12 +104,16 @@ class Creature:
     def get_magic_attack_type(self):
         return self.magic_attack_type
 
+    def reset_creature_stats(self):
+        self.health_points = 100
+
+
 
 class Hero(Creature):
 
     def __init__(self, health_points=100, mana_points=100, strength=55,
-                 power=10, armor=10, agility=10, magic_resistance=None):
-        Creature.__init__(self, health_points, strength, power, armor, agility, magic_resistance)
+                 power=10, armor=10, agility=10):
+        Creature.__init__(self, health_points, strength, power, armor, agility)
         self.mana_points = mana_points
         self.gold = 10000
         self.active_sword: Sword = None
@@ -177,9 +181,11 @@ class Hero(Creature):
                 return 3
             return 0
 
-    def reset_hero_stats(self):
-        self.health_points = 100
+    def reset_creature_stats(self):
+        Creature.reset_creature_stats(self)
         self.mana_points = 100
+
+
 
 
 class Enemy(Creature):
