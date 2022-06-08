@@ -1,21 +1,18 @@
 import pygame
-from Game_classes.creature import Enemy
+
 
 class Fight:
     def __init__(self, hero, game, level):
         self.cursor_rect = pygame.Rect(0, 0, 20, 20)
         self.hero = hero
         self.level = level
-        self.enemy = level.enemy  # TODO losowanie przeskalowanego wroga
+        self.enemy = level.enemy
         self.gold = level.gold_given
         self.state = "Attack"
-        # TODO poziom stwora
-        self.action_type = None #do zapisywania jaki ruch chce player
+        self.action_type = None
         self.hero_state = 0
         self.enemy_state = 0
-        self.timer_running = True   # kiedy jest true, paski hero_state i enemy_state się łądują
-        #inna opcja - stworzyć mini okienko w loopie - główna pętla gry ma używać sleepów. raz na pętlę dodajemy
-        #agility *0.01 do hero state i enemy state
+        self.timer_running = True
         self.potion_used = False
         self.defending = False
 
@@ -28,7 +25,6 @@ class Fight:
         self.magic_option_x_coord = self.game.DISPLAY_W / 8 * 5
         self.potion_opt_x_coord = self.game.DISPLAY_W / 8 * 7
         self.opt_y_coord = self.game.DISPLAY_H / 4 * 3
-
 
     def fight_loop(self):
         while self.fight_is_on:
@@ -47,7 +43,6 @@ class Fight:
                 self.end_fight_good(self.gold)
                 break
 
-            # pygame.time.wait(1000)
             self.display_game_scene()
             curr_state, possible_attack = self.enemy_action()
             if curr_state == "Attack" or curr_state == "Magic":
@@ -56,15 +51,10 @@ class Fight:
             if self.hero.is_dead():
                 self.end_fight_bad()
                 break
-            # pygame.time.wait(1000)
             self.movement_regeneration()
 
     def display_game_scene(self):
-        # self.game.display.fill(self.game.BLACK)
-        self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
-        # self.game.draw_text("hero: health points: " + str(self.hero.health_points) + "/100 " +
-        #                     "move points: " + str(self.hero_state) + "/100 " + str(self.hero.mana_points) + "/100",
-        #                     20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2)
+        self.game.display.blit(self.game.background_image, (0, 0))
         pygame.draw.rect(self.game.display, (255, 0, 0),
                          ((self.game.DISPLAY_W / 2 - 100), 350, 200 * (self.enemy.health_points / 100), 15), 10)
         pygame.draw.rect(self.game.display, (255, 255, 0),
@@ -77,15 +67,11 @@ class Fight:
         self.game.draw_text("Defend", 20, self.defend_opt_x_coord, self.opt_y_coord, (64, 64, 64))
         self.game.draw_text("Magic", 20, self.magic_option_x_coord, self.opt_y_coord, (64, 64, 64))
         self.game.draw_text("Potion", 20, self.potion_opt_x_coord, self.opt_y_coord, (64, 64, 64))
-        # self.game.draw_text("enemy: health points: " + str(self.enemy.health_points) + "/100 " +
-        #                     "move points: " + str(self.enemy_state) + "/100",
-        #                     20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 + 30)
         self.game.window.blit(self.game.display, (0, 0))
         self.game.window.blit(self.enemy.image, (self.game.DISPLAY_W / 2 - 100, 150))
         pygame.display.update()
 
     def display_fight_scene(self):
-        # self.game.display.fill(self.game.BLACK)
         self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
         pygame.draw.rect(self.game.display, (255, 0, 0),
                          ((self.game.DISPLAY_W / 2 - 100), 350, 200 * (self.enemy.health_points / 100), 15), 10)
@@ -95,14 +81,6 @@ class Fight:
                          (30, self.opt_y_coord + 50, 200 * (self.hero.health_points / 100), 15), 10)
         pygame.draw.rect(self.game.display, (255, 255, 0),
                          (30, self.opt_y_coord + 70, 200 * (self.hero_state / 100), 15), 10)
-        # pygame.draw.rect(self.game.display, (255, 0, 0),
-        #                  ((self.game.DISPLAY_W / 2 - 100), 350, 200 * (self.hero.health_points / 100), 15), 10)
-        # self.game.draw_text("hero: health points: " + str(self.hero.health_points) + "/100 " +
-        #                     "move points: " + str(self.hero_state) + "/100",
-        #                     20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2)
-        # self.game.draw_text("enemy: health points: " + str(self.enemy.health_points) + "/100 " +
-        #                     "move points: " + str(self.enemy_state) + "/100",
-        #                     20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 + 30)
         self.game.draw_text("Attack", 20, self.attack_opt_x_coord, self.opt_y_coord, self.get_color("Attack"))
         self.game.draw_text("Defend", 20, self.defend_opt_x_coord, self.opt_y_coord, self.get_color("Defend"))
         self.game.draw_text("Magic", 20, self.magic_option_x_coord, self.opt_y_coord, self.get_color("Magic"))
@@ -157,22 +135,22 @@ class Fight:
     def get_color(self, string):
         if self.state == string:
             return 255, 0, 0
-        elif string == "Magic" and self.hero.active_wand == None:
+        elif string == "Magic" and self.hero.active_wand is None:
             return 64, 64, 64
-        elif string == "Potion" and self.hero.active_potion == None:
+        elif string == "Potion" and self.hero.active_potion is None:
             return 64, 64, 64
 
         else:
             return 255, 255, 255
 
     def display_turn_info(self, info):
-        # self.game.display.fill(self.game.BLACK)
         self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
         self.game.draw_text(info, 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2)
         self.game.window.blit(self.game.display, (0, 0))
         pygame.display.update()
 
-    def hero_action(self):#TODO zrob ze resetowanie obrony na turze ograniczenia na atakowanie np magiczne albo na poty
+    def hero_action(
+            self):  # TODO zrob ze resetowanie obrony na turze ograniczenia na atakowanie np magiczne albo na poty
         self.state = "Attack"
         self.game.check_events()
         self.game.reset_keys()
@@ -200,9 +178,7 @@ class Fight:
         attack_damage, magic_type = attack_stats
         if self.defending:
             attack_damage //= 2
-        print(attack_damage)
         attack_damage = targeted_creature.reduce_damage(attack_type, attack_damage, magic_type)
-        print(attack_damage, "end")
         targeted_creature.receive_injuries(attack_damage)
 
     def movement_regeneration(self):
@@ -228,4 +204,3 @@ class Fight:
         self.fight_is_on = False
         self.hero.reset_creature_stats()
         self.enemy.reset_creature_stats()
-

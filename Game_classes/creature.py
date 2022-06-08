@@ -1,8 +1,8 @@
-from typing import List
+from enum import Enum
 
 from Game_classes.item import Sword, Armor, Wand, Potion
-from enum import Enum
 from Game_classes.item import init_inventory, ItemType
+
 
 def init_enemies(images):
     moves = [["Attack", "Attack", "Magic"], ["Attack", "Magic"], ["Attack", "Attack", "Defend"], ["Magic"]]
@@ -16,7 +16,7 @@ def init_enemies(images):
         Enemy(images[0], 100, 40, 40, 20, 10, MagicResistance(0, 0, 0.5), MagicAttackType.FIRE, Strategy(moves[0])),
         Enemy(images[1], 100, 60, 60, 5, 15, MagicResistance(0, 0.5, 0.5), MagicAttackType.FIRE, Strategy(moves[1])),
         Enemy(images[2], 100, 90, 0, 45, 5, MagicResistance(0, 0, 0), MagicAttackType.FIRE, Strategy(moves[2])),
-        Enemy(images[3], 100, 100, 100, 40, 10, MagicResistance(0.5, 0.5, 0.5), MagicAttackType.FIRE, Strategy(moves[3]))
+        Enemy(images[3], 100, 100, 45, 40, 10, MagicResistance(0.5, 0.5, 0.5), MagicAttackType.FIRE, Strategy(moves[3]))
     ]
     return enemies
 
@@ -79,7 +79,6 @@ class Creature:
 
     def receive_injuries(self, damage: int):
         self.health_points -= damage
-        print("that much healt i have: ",self.health_points)
 
     def is_dead(self):
         return self.health_points <= 0
@@ -88,7 +87,6 @@ class Creature:
         if attack_type == "Attack":
             return self.calculate_attack(), None
         else:
-            print("thjis is magic modefaka mag typ", self.get_magic_attack_type())
             return self.calculate_power(), self.get_magic_attack_type()
 
     def reduce_damage(self, attack_type, damage, magic_attack_type):
@@ -96,7 +94,6 @@ class Creature:
             return max(0, damage - self.calculate_armor())
         else:
             if self.magic_resistance is not None:
-                print(magic_attack_type)
                 return damage * (1 - self.magic_resistance.get_magic_resistance(magic_attack_type))
             else:
                 return damage
@@ -106,7 +103,6 @@ class Creature:
 
     def reset_creature_stats(self):
         self.health_points = 100
-
 
 
 class Hero(Creature):
@@ -120,14 +116,12 @@ class Hero(Creature):
         self.active_armor: Armor = None
         self.active_wand: Wand = None
         self.active_potion: Potion = None
-        self.items = init_inventory() # przedmioty gracza wszystkie inicjalizujemy na None
+        self.items = init_inventory()
 
     def calculate_attack(self):
         if self.active_sword is not None:
-            print("miecz huju")
             return self.strength + self.active_sword.strength_bonus
         else:
-            print("tylko huju")
             return self.strength
 
     def calculate_armor(self):
@@ -144,7 +138,6 @@ class Hero(Creature):
             return self.power
 
     def get_magic_attack_type(self):
-        print("gttiung magic type")
         return self.active_wand.magic_type
 
     # TODO chyba trzeba zrobić że uzycie poty zabiera staminę plus zrobić żeby nie mozna było dwa razy poty użyć w walce
@@ -163,7 +156,6 @@ class Hero(Creature):
                 if self.active_sword == item_o:
                     return 2
                 self.active_sword = item_o
-                print("no chyba zalozyl")
             elif type == ItemType.WAND:
                 if self.active_wand == item_o:
                     return 2
@@ -184,8 +176,6 @@ class Hero(Creature):
     def reset_creature_stats(self):
         Creature.reset_creature_stats(self)
         self.mana_points = 100
-
-
 
 
 class Enemy(Creature):

@@ -8,4 +8,3 @@ class Level:
         self.enemy = enemy
         self.completed = False
         self.gold_given = gold
-

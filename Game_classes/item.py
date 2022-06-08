@@ -3,9 +3,9 @@ from enum import Enum
 
 def init_inventory():
     inventory = {
-        "miecz 1" : None,
-        "miecz 2" : None,
-        "miecz 3" : None,
+        "miecz 1": None,
+        "miecz 2": None,
+        "miecz 3": None,
         "zbroja 1": None,
         "zbroja 2": None,
         "zbroja 3": None,
@@ -60,4 +60,3 @@ class ItemType(Enum):
     ARMOR = 2
     WAND = 3
     POTION = 4
-

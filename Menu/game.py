@@ -7,7 +7,7 @@ from Game_classes.creature import Hero, init_enemies
 from pygame import mixer
 
 
-class Game():
+class Game:
     def __init__(self, player_hero: Hero):
         self.player_hero = player_hero
         pygame.init()
@@ -36,7 +36,6 @@ class Game():
         self.curr_menu = self.main_menu
         self.shop = Shop()
         self.levels = init_levels(init_enemies(self.init_images()))
-
 
     def game_loop(self):
         while self.playing:
@@ -83,9 +82,10 @@ class Game():
         if level_index == 1 or self.levels[level_index - 2].completed:
             return 255, 255, 255
         else:
-            return 64,64,64
+            return 64, 64, 64
 
-    def init_images(self):
+    @staticmethod
+    def init_images():
         image_w = 200
         image_h = 200
         skeleton = pygame.image.load("../game_contents/skeleton.png")

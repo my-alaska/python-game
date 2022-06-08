@@ -1,8 +1,7 @@
 import pygame
-
-from Game_classes.creature import Hero, Enemy
-from Game_classes.fight import Fight
 from pygame import mixer
+
+from Game_classes.fight import Fight
 
 
 class Menu():
