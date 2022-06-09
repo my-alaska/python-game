@@ -22,10 +22,8 @@ class Shop:
 
     def sell_item_to_hero(self, item_name, hero: Hero):
         if hero.items[item_name] is not None:
-            print("masz już ten przedmiot")
             return 1
         elif hero.gold < self.items[item_name].cost:
-            print("za mało złota")
             return 2
         else:
             hero.gold -= self.items[item_name].cost

@@ -1,10 +1,10 @@
 import pygame
 
 from Game_classes.level import init_levels
-from menu import MainMenu, OptionsMenu, CreditsMenu, GameplayMenu, LevelMenu, CharacterMenu, StatsMenu, ShopMenu
 from Game_classes.shop import Shop
 from Game_classes.creature import Hero, init_enemies
 from pygame import mixer
+import menu
 
 
 class Game:
@@ -25,14 +25,14 @@ class Game:
         self.window = pygame.display.set_mode((self.DISPLAY_W, self.DISPLAY_H))
         self.BLACK, self.WHITE = (0, 0, 0), (255, 255, 255)
         self.font_name = pygame.font.get_default_font()
-        self.main_menu = MainMenu(self)
-        self.options_menu = OptionsMenu(self)
-        self.credits_menu = CreditsMenu(self)
-        self.gameplay_menu = GameplayMenu(self)
-        self.level_menu = LevelMenu(self)
-        self.character_menu = CharacterMenu(self)
-        self.stats_menu = StatsMenu(self)
-        self.shop_menu = ShopMenu(self)
+        self.main_menu = menu.MainMenu(self)
+        self.options_menu = menu.OptionsMenu(self)
+        self.credits_menu = menu.CreditsMenu(self)
+        self.gameplay_menu = menu.GameplayMenu(self)
+        self.level_menu = menu.LevelMenu(self)
+        self.character_menu = menu.CharacterMenu(self)
+        self.stats_menu = menu.StatsMenu(self)
+        self.shop_menu = menu.ShopMenu(self)
         self.curr_menu = self.main_menu
         self.shop = Shop()
         self.levels = init_levels(init_enemies(self.init_images()))

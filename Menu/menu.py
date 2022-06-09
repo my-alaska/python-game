@@ -309,6 +309,7 @@ class CharacterMenu(Menu):
             elif self.state == "Mikstura":
                 self.state = "Broń"
                 self.o = ["miecz 1", "miecz 2", "miecz 3"]
+            return True
         elif self.game.LEFT_KEY:
             if self.state == "Zbroja":
                 self.state = "Różdżka"
@@ -322,15 +323,20 @@ class CharacterMenu(Menu):
             elif self.state == "Różdżka":
                 self.state = "Broń"
                 self.o = ["miecz 1", "miecz 2", "miecz 3"]
+            return True
         elif self.game.UP_KEY and self.cursor_state != 1:
             self.cursor_state -= 1
             self.move_cursor()
+            return True
         elif self.game.DOWN_KEY and self.cursor_state != 3:
             self.cursor_state += 1
             self.move_cursor()
+            return True
+        return False
 
     def check_input(self):
-        self.update_state()
+        if self.update_state():
+            self.fail_message = ""
         if self.game.START_KEY:
             wear_result = self.game.player_hero.wear(self.o[self.cursor_state - 1])
             if wear_result == 0:
@@ -342,6 +348,7 @@ class CharacterMenu(Menu):
             else:
                 self.fail_message = "unexpected error"
         elif self.game.BACK_KEY:
+            self.fail_message = ""
             self.run_display = False
             self.game.curr_menu = self.game.gameplay_menu
 
@@ -395,6 +402,8 @@ class ShopMenu(Menu):
         self.x2, self.y2 = self.mid_w, self.mid_h + 50
         self.x3, self.y3 = self.mid_w, self.mid_h + 70
         self.x4, self.y4 = self.mid_w, self.mid_h + 110
+        self.xg,self.yg = self.mid_w, self.mid_h - 70
+        self.offset -= 40
         self.cursor_rect.midtop = (self.x1 + self.offset, self.y1)
         self.o = ["miecz 1", "miecz 2", "miecz 3"]
 
@@ -406,9 +415,10 @@ class ShopMenu(Menu):
             self.game.display.blit(self.game.background_image, (0, 0))  # ustawiam tło
             # self.game.display.fill(self.game.BLACK)
             self.game.draw_text(self.state, 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
-            self.game.draw_text(self.o[0], 20, self.x1, self.y1)
-            self.game.draw_text(self.o[1], 20, self.x2, self.y2)
-            self.game.draw_text(self.o[2], 20, self.x3, self.y3)
+            self.game.draw_text(self.o[0]+f":  {self.game.shop.items[self.o[0]].cost}g", 20, self.x1, self.y1)
+            self.game.draw_text(self.o[1]+f":  {self.game.shop.items[self.o[1]].cost}g", 20, self.x2, self.y2)
+            self.game.draw_text(self.o[2]+f":  {self.game.shop.items[self.o[2]].cost}g", 20, self.x3, self.y3)
+            self.game.draw_text(f"you have {self.game.player_hero.gold} gold", 20, self.xg, self.yg)
             if self.fail_message is not None:
                 self.game.draw_text(self.fail_message, 20, self.x4, self.y4)
             self.draw_cursor()
@@ -436,6 +446,7 @@ class ShopMenu(Menu):
             elif self.state == "Mikstura":
                 self.state = "Broń"
                 self.o = ["miecz 1", "miecz 2", "miecz 3"]
+            return True
         elif self.game.LEFT_KEY:
             if self.state == "Zbroja":
                 self.state = "Różdżka"
@@ -448,15 +459,20 @@ class ShopMenu(Menu):
                 self.o = ["miecz 1", "miecz 2", "miecz 3"]
             elif self.state == "Broń":
                 self.o = ["mała mikstura", "średnia mikstura", "duża mikstura"]
+            return True
         elif self.game.UP_KEY and self.cursor_state != 1:
             self.cursor_state -= 1
             self.move_cursor()
+            return True
         elif self.game.DOWN_KEY and self.cursor_state != 3:
             self.cursor_state += 1
             self.move_cursor()
+            return True
+        return False
 
     def check_input(self):
-        self.update_state()
+        if self.update_state():
+            self.fail_message = ""
         if self.game.START_KEY:
             sale_result = self.game.shop.sell_item_to_hero(self.o[self.cursor_state - 1], self.game.player_hero)
             if sale_result == 1:
@@ -466,6 +482,7 @@ class ShopMenu(Menu):
             else:
                 self.fail_message = "successful purchase"
         elif self.game.BACK_KEY:
+            self.fail_message = ""
             self.run_display = False
             self.game.curr_menu = self.game.gameplay_menu
 

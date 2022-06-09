@@ -111,7 +111,7 @@ class Hero(Creature):
                  power=10, armor=10, agility=10):
         Creature.__init__(self, health_points, strength, power, armor, agility)
         self.mana_points = mana_points
-        self.gold = 10000
+        self.gold = 100
         self.active_sword: Sword = None
         self.active_armor: Armor = None
         self.active_wand: Wand = None
@@ -132,7 +132,6 @@ class Hero(Creature):
 
     def calculate_power(self):
         if self.active_wand is not None:
-            print("rozdzka dziala")
             return self.power + self.active_wand.power_bonus
         else:
             return self.power
@@ -148,7 +147,6 @@ class Hero(Creature):
     def wear(self, item_name):
         item_o = self.items[item_name]
         if item_o is None:
-            print("you don't own this item")
             return 1
         else:
             type = item_o.item_type
@@ -169,7 +167,6 @@ class Hero(Creature):
                     return 2
                 self.active_potion = item_o
             else:
-                print("gupi error którego pewnie nigdy nie będzie")
                 return 3
             return 0
 

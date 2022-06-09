@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fcc770b3-9c14-4ffa-99ad-4867ba3b6fd8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Game_classes/level.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game_contents/background.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game_contents/hotpot.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game_contents/knight.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game_contents/python game ost.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game_contents/python game ost.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game_contents/skeleton.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game_contents/slime.png" afterDir="false" />
+    <list default="true" id="fcc770b3-9c14-4ffa-99ad-4867ba3b6fd8" name="Changes" comment="Debugging kolos za pare dni">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_4_22,_7_12_PM_[Changes]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game_classes/creature.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game_classes/creature.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game_classes/fight.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game_classes/fight.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game_classes/item.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game_classes/item.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game_classes/shop.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game_classes/shop.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Menu/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Menu/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Menu/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Menu/menu.py" afterDir="false" />
@@ -111,6 +102,14 @@
       <workItem from="1653326611750" duration="7728000" />
       <workItem from="1653486065756" duration="15641000" />
     </task>
+    <task id="LOCAL-00001" summary="Debugging kolos za pare dni">
+      <created>1654076664865</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1654076664865</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -126,23 +125,10 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Game_classes/creature.py</url>
-          <line>51</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/python_game$main.coverage" NAME="main Coverage Results" MODIFIED="1653515255194" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Menu" />
+    <MESSAGE value="Debugging kolos za pare dni" />
+    <option name="LAST_COMMIT_MESSAGE" value="Debugging kolos za pare dni" />
   </component>
 </project>
