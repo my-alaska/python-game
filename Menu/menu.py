@@ -1,7 +1,7 @@
 import pygame
 from pygame import mixer
 
-from Game_classes.fight import Fight
+from game_classes.fight import Fight
 
 
 class Menu():
@@ -122,7 +122,7 @@ class CreditsMenu(Menu):
 
     def display_game(self):
         self.run_display = True
-        chungus = pygame.image.load("chungus.png")
+        chungus = pygame.image.load("../game_contents/chungus.png")
         while self.run_display:
             self.game.check_events()
             self.check_input()

@@ -1,5 +1,5 @@
 from game import Game
-from Game_classes.creature import Hero
+from game_classes.creature import Hero
 
 
 def main():

@@ -1,8 +1,8 @@
 import pygame
 
-from Game_classes.level import init_levels
-from Game_classes.shop import Shop
-from Game_classes.creature import Hero, init_enemies
+from game_classes.level import init_levels
+from game_classes.shop import Shop
+from game_classes.creature import Hero, init_enemies
 from pygame import mixer
 import menu
 
