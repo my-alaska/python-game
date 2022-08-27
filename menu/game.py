@@ -11,7 +11,7 @@ class Game:
     def __init__(self, player_hero: Hero):
         self.player_hero = player_hero
         pygame.init()
-        mixer.music.load("../game_contents/python game ost.mp3")
+        mixer.music.load("../game_contents/python_game_ost.mp3")
         self.volume = 0
         mixer.music.set_volume(self.volume / 10)
         mixer.music.play(-1)
